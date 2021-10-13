@@ -7,6 +7,12 @@ CommonSetup()
 
 IncludeEigen()
 
+# Find GTSAM, either from a local build, or from a Debian/Ubuntu package.
+find_package(GTSAM REQUIRED)
+# Find boost
+find_package(Boost COMPONENTS program_options REQUIRED)
+
+
 SetupConsoleBuild()
 
 ## Specify additional locations of header files
@@ -21,5 +27,7 @@ include_directories(
 AddExecutableSource()
 			
 CommonTargetLink()
-target_link_libraries(${PROJECT_NAME} AirLib)
-target_link_libraries(${PROJECT_NAME} ${RPC_LIB})
+target_link_libraries(${PROJECT_NAME} PRIVATE gtsam)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC AirLib)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${RPC_LIB})
