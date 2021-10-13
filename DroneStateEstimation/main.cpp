@@ -112,7 +112,7 @@ int main()
 
         auto position = client.getMultirotorState().getPosition();
         float z = position.z(); // current position (NED coordinate system).
-        const float speed = 1.0f;
+        const float speed = 3.0f;
         const float size = 30.0f;
         const float duration = size / speed;
         DrivetrainType drivetrain = DrivetrainType::MaxDegreeOfFreedom;

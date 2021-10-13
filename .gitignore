@@ -33,8 +33,6 @@ cmake_install.cmake
 CMakeCache.txt
 CMakeScripts/
 *.build
-*.xcodeproj
-*.xcworkspace
 *.cmake
 *.pc
 
@@ -369,6 +367,8 @@ xcuserdata/
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
+*.xcodeproj
+*.xcworkspace
 
 # Unity
 /Unity/UnityDemo/Assembly-CSharp.csproj
@@ -396,3 +396,6 @@ build_docs/
 
 # api docs
 PythonClient/docs/_build
+
+#Drone state estimation outputs
+DroneStateEstimation/output
