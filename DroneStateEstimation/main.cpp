@@ -21,7 +21,7 @@ int main()
 {
     using namespace msr::airlib;
     msr::airlib::MultirotorRpcLibClient client;
-    StateEstimator::StateEstimator stateEstimator{client};
+    StateEstimator::StateEstimator stateEstimator{ client };
     typedef ImageCaptureBase::ImageRequest ImageRequest;
     typedef ImageCaptureBase::ImageResponse ImageResponse;
     typedef ImageCaptureBase::ImageType ImageType;
@@ -116,44 +116,40 @@ int main()
         const float size = 30.0f;
         const float duration = size / speed;
         DrivetrainType drivetrain = DrivetrainType::MaxDegreeOfFreedom;
-        YawMode yaw_mode(true, 360 /duration);
+        YawMode yaw_mode(true, 360 / duration);
 
         // Rotate the drone by pi/2
-       const float rotationYaw{3.1415/2};
-       const float durationRotation{rotationYaw / speed};
-       client.moveByRollPitchYawrateZAsync(0,0,speed,z,durationRotation);
-       std::this_thread::sleep_for(std::chrono::duration<double>(2.0));
-       // Make a circle without yaw
-       msr::airlib::vector<msr::airlib::Vector3r> myPath{};
-       const float radiusCircle{5.0f};
-       const int numberPoints{20};
-       for(int indexPoint{0}; indexPoint < numberPoints; ++indexPoint){
-           myPath.push_back({
-           radiusCircle * sin(3.1415 * 2 * indexPoint / (numberPoints - 1)),
-           radiusCircle * (cos(3.1415 * 2 * indexPoint / (numberPoints - 1)) - 1),
-           z
-           });
-       }
-       myPath.push_back({5, 0 ,z});
-       myPath.push_back({5, 10 ,z});
-       myPath.push_back({0, 10 ,z});
-       myPath.push_back({0, 0 ,z});
-       myPath.push_back({-5, 0 ,z});
-       myPath.push_back({-5, 10 ,z});
-       myPath.push_back({0, 10 ,z});
-       myPath.push_back({0, 0 ,z});
-       data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.txt");
-       data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.txt");
-       client.moveOnPathAsync(myPath, speed);
-       data_record::recordSync(
-           (int)(radiusCircle * 2 * 3.1415 / speed + 80 /speed + 1) * 1000, 
-           100,
+        const float rotationYaw{ 3.1415 / 2 };
+        const float durationRotation{ rotationYaw / speed };
+        client.moveByRollPitchYawrateZAsync(0, 0, speed, z, durationRotation);
+        std::this_thread::sleep_for(std::chrono::duration<double>(2.0));
+        // Make a circle without yaw
+        msr::airlib::vector<msr::airlib::Vector3r> myPath{};
+        const float radiusCircle{ 5.0f };
+        const int numberPoints{ 20 };
+        for (int indexPoint{ 0 }; indexPoint < numberPoints; ++indexPoint) {
+            myPath.push_back({ radiusCircle * sin(3.1415 * 2 * indexPoint / (numberPoints - 1)),
+                               radiusCircle * (cos(3.1415 * 2 * indexPoint / (numberPoints - 1)) - 1),
+                               z });
+        }
+        myPath.push_back({ 5, 0, z });
+        myPath.push_back({ 5, 10, z });
+        myPath.push_back({ 0, 10, z });
+        myPath.push_back({ 0, 0, z });
+        myPath.push_back({ -5, 0, z });
+        myPath.push_back({ -5, 10, z });
+        myPath.push_back({ 0, 10, z });
+        myPath.push_back({ 0, 0, z });
+        data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.csv");
+        data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.csv");
+        client.moveOnPathAsync(myPath, speed);
+        data_record::recordSync(
+            (int)(radiusCircle * 2 * 3.1415 / speed + 80 / speed + 1) * 1000,
+            100,
             client,
-           "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.txt",
-           stateEstimator,
-           "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.txt"
-        );
-
+            "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.csv",
+            stateEstimator,
+            "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.csv");
         client.hoverAsync()->waitOnLastTask();
         client.landAsync(takeoff_timeout)->waitOnLastTask();
 
