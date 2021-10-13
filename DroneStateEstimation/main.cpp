@@ -97,8 +97,6 @@ int main()
         //           << "magnetometer_data.time_stamp \t" << magnetometer_data.time_stamp << std::endl
         //           << "magnetometer_data.magnetic_field_body \t" << magnetometer_data.magnetic_field_body << std::endl;
 
-        // std::cout << "Press Enter to takeoff" << std::endl;
-        // std::cin.get();
         float takeoff_timeout = 2;
         client.takeoffAsync(takeoff_timeout)->waitOnLastTask();
 
@@ -135,13 +133,20 @@ int main()
            radiusCircle * (cos(3.1415 * 2 * indexPoint / (numberPoints - 1)) - 1),
            z
            });
-        //    std::cout << "my path = " << myPath[indexPoint] << std::endl;
        }
+       myPath.push_back({5, 0 ,z});
+       myPath.push_back({5, 10 ,z});
+       myPath.push_back({0, 10 ,z});
+       myPath.push_back({0, 0 ,z});
+       myPath.push_back({-5, 0 ,z});
+       myPath.push_back({-5, 10 ,z});
+       myPath.push_back({0, 10 ,z});
+       myPath.push_back({0, 0 ,z});
        data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.txt");
        data_record::createFile("/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.txt");
        client.moveOnPathAsync(myPath, speed);
        data_record::recordSync(
-           (int)(radiusCircle * 2 * 3.1415 / speed + 1) * 1000, 
+           (int)(radiusCircle * 2 * 3.1415 / speed + 80 /speed + 1) * 1000, 
            100,
             client,
            "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/gt.txt",
@@ -149,38 +154,13 @@ int main()
            "/Users/etiennedupont/Code/AirSim/DroneStateEstimation/output/pred.txt"
         );
 
-
-        // for(int index{0}; index < 10; ++index){
-        //     client.moveByVelocityZBodyFrameAsync(speed, 0, z, duration/9, drivetrain, yaw_mode);
-        //     std::this_thread::sleep_for(std::chrono::duration<double>(duration/9));
-        // }
-        // client.moveByVelocityZAsync(0, speed, z, duration, drivetrain, yaw_mode);
-        // client.moveByVelocityZAsync(speed, 0, z, duration, drivetrain, yaw_mode);
-        // std::cout << "x = " << client.getMultirotorState().getPosition().x() 
-        //           <<  "y = " << client.getMultirotorState().getPosition().y() << std::endl;
-
-        // std::cout << "moveByVelocityZ(" << speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        // client.moveByVelocityZAsync(speed, 0, z, duration, drivetrain, yaw_mode);
-        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        // std::cout << "moveByVelocityZ(0, " << speed << "," << z << "," << duration << ")" << std::endl;
-        // client.moveByVelocityZAsync(0, speed, z, duration, drivetrain, yaw_mode);
-        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        // std::cout << "moveByVelocityZ(" << -speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        // client.moveByVelocityZAsync(-speed, 0, z, duration, drivetrain, yaw_mode);
-        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        // std::cout << "moveByVelocityZ(0, " << -speed << "," << z << "," << duration << ")" << std::endl;
-        // client.moveByVelocityZAsync(0, -speed, z, duration, drivetrain, yaw_mode);
-        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-
         client.hoverAsync()->waitOnLastTask();
-
-        // std::cout << "Press Enter to land" << std::endl;
-        // std::cin.get();
         client.landAsync(takeoff_timeout)->waitOnLastTask();
 
         std::cout << "Press Enter to disarm" << std::endl;
         std::cin.get();
-//        client.armDisarm(false);
+        client.reset();
+        client.armDisarm(false);
     }
     catch (rpc::rpc_error& e) {
         std::string msg = e.get_error().as<std::string>();

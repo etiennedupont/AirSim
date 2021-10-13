@@ -3,9 +3,9 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def plot_trajectory(input_path_gt, output_path):
+def plot_trajectory(input_path_gt, color="blue"):
     data = pd.read_csv(input_path_gt)
-    plt.plot(data["x"], data["y"])
+    plt.plot(data["x"], data["y"], color=color)
     width_arrow = 0.001
     for index, row in data.iterrows():
         if index % 10 != 0:
@@ -16,9 +16,9 @@ def plot_trajectory(input_path_gt, output_path):
         if orientation_x != 0 or orientation_y != 0:
             orientation_x_norm = 5e-1 * orientation_x / (orientation_x**2+orientation_y**2)
             orientation_y_norm = 5e-1 * orientation_y / (orientation_x**2+orientation_y**2)
-            plt.arrow(row["x"],row["y"],orientation_x_norm,orientation_y_norm, width=width_arrow, head_width=width_arrow*100)
+            plt.arrow(row["x"],row["y"],orientation_x_norm,orientation_y_norm, width=width_arrow, head_width=width_arrow*100, edgecolor=color)
     plt.gca().set_aspect("equal")
-    plt.savefig(os.path.join(output_path, "fig.svg"))
+    # fig.savefig(os.path.join(output_path, "fig.svg"))
 
 def main():
     parser = argparse.ArgumentParser(description="Plot drone ground truth trajectory vs estimated trajectory")
@@ -41,7 +41,10 @@ def main():
         required=True,
     )
     args = parser.parse_args()
-    plot_trajectory(args.input_path_gt, args.output_path)
+    fig = plt.figure()
+    plot_trajectory(args.input_path_gt, color="green")
+    plot_trajectory(args.input_path_pred, color="blue")
+    fig.savefig(os.path.join(args.output_path, "fig.svg"))
 
 if __name__ == "__main__":
     main()

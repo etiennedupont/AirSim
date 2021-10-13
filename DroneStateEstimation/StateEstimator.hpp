@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "common/ClockFactory.hpp"
+#include "common/GeodeticConverter.hpp"
 #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 
 namespace StateEstimator{
@@ -28,6 +29,7 @@ namespace StateEstimator{
     class StateEstimator{
         private:
             msr::airlib::MultirotorRpcLibClient& client;
+            msr::airlib::GeodeticConverter geodeticConverter;
         public:
             StateEstimator(msr::airlib::MultirotorRpcLibClient& client);
             State getState();
