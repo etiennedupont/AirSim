@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include "VectorMath.hpp"
+#include "./CommonStructs.hpp"
 
 namespace msr
 {
